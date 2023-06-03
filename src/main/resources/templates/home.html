@@ -21,17 +21,22 @@
             Role(s): <span sec:authentication="principal.authorities"></span>
         </p>
 
+        <div sec:authorize="hasRole('MANAGER')">
         <!--add link to /leaders-->
-        <p>
-            <a th:href="@{/leaders}">Leadership Meeting</a>
-            (Only for manager people)
-        </p>
+             <p>
+             <a th:href="@{/leaders}">Leadership Meeting</a>
+                (Only for manager people)
+            </p>
+        </div>
 
-        <!--add link to /admin-->
-        <p>
-            <a th:href="@{/admins}">admin Meeting</a>
-            (Only for admin people)
-        </p>
+        
+        <div sec:authorize="hasRole('ADMIN')">
+         <!--add link to /admin-->
+          <p>
+             <a th:href="@{/admins}">admin Meeting</a>
+             (Only for admin people)
+           </p>
+        </div>
         <!-- add logout button-->
         <form action="#" th:action="@{/logout}" method="POST">
             <input type="submit" value="logout"/>   
