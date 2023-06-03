@@ -14,15 +14,15 @@ public class DemoSecurityConfig {
     @Bean
     public InMemoryUserDetailsManager userDetailsManager() {
         UserDetails john = User.builder().username("john")
-                .roles("EMPLOYE")
+                .roles("EMPLOYEE")
                 .password("{noop}test1234")
                 .build();
         UserDetails mary = User.builder().username("mary")
-                .roles("EMPLOYE", "MANAGER")
+                .roles("EMPLOYEE", "MANAGER")
                 .password("{noop}test1234")
                 .build();
         UserDetails susan = User.builder().username("susan")
-                .roles("EMPLOYE", "MANAGER", "ADMIN")
+                .roles("EMPLOYEE", "MANAGER", "ADMIN")
                 .password("{noop}test1234")
                 .build();
 
@@ -32,12 +32,17 @@ public class DemoSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http.authorizeHttpRequests(configurer -> configurer.anyRequest().authenticated())
+        http.authorizeHttpRequests(configurer -> configurer
+                .requestMatchers("/").hasRole("EMPLOYEE")
+                .requestMatchers("/leaders").hasAnyRole("MANAGER", "ADMIN")
+                .requestMatchers("/admins").hasAnyRole("ADMIN")
+                .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/showMyLoginPage")
                         .loginProcessingUrl("/authenticateTheUser")
                         .permitAll())
-                .logout(logout -> logout.permitAll());
+                .logout(logout -> logout.permitAll())
+                .exceptionHandling(configurer -> configurer.accessDeniedPage("/access-denied"));
         return http.build();
     }
 

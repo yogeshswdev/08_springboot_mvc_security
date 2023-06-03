@@ -10,4 +10,11 @@ public class LoginController {
         // return "plain-login";
         return "fancy-login";
     }
+
+    // add req mapping for access denied
+    @GetMapping("/access-denied")
+    public String showAccessDenied() {
+        // return "plain-login";
+        return "access-denied";
+    }
 }
